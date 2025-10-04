@@ -247,7 +247,7 @@ async function handleLogin(code: any) {
 
 // Handle window controls via IPC
 ipcMain.on('shell:open', () => {
-  const pageDirectory = __dirname.replace('app.asar', 'app.asar.unpacked')
+  const pageDirectory = __dirname.replace('app.asar', 'app.asar.unpacked');
   const pagePath = path.join('file://', pageDirectory, 'index.html');
   shell.openExternal(pagePath);
 });
@@ -298,7 +298,7 @@ ipcMain.on('download-update', async () => {
 });
 
 ipcMain.on('update-section', (event, ...args) => {
-  if(!mainWindow) return;
+  if (!mainWindow) return;
   mainWindow.webContents.send('update-section', ...args);
 });
 
@@ -309,11 +309,19 @@ const clientId = '1256111110151475241';
 const RPC = new DiscordRPC.Client({ transport: 'ipc' });
 DiscordRPC.register(clientId);
 
-async function setActivity(details?: string, state?: string, startTimestamp?: number, largeImageKey?: string, largeImageText?: string, smallImageKey?: string, instance?: boolean, buttons?: any[]) {
+async function setActivity(
+  details?: string,
+  state?: string,
+  startTimestamp?: number,
+  largeImageKey?: string,
+  largeImageText?: string,
+  smallImageKey?: string,
+  instance?: boolean,
+  buttons?: any[],
+) {
   if (!RPC || !mainWindow) {
     return;
   }
-
 
   RPC.setActivity({
     details: details || '🌸 Watch anime without ads.',
@@ -338,5 +346,14 @@ RPC.on('ready', () => {
 RPC.login({ clientId }).catch(console.error);
 
 ipcMain.on('update-presence', (event, data) => {
-  setActivity(data.details, data.state, data.startTimestamp, data.largeImageKey, data.largeImageText, data.smallImageKey, data.instance, data.buttons);
-})
+  setActivity(
+    data.details,
+    data.state,
+    data.startTimestamp,
+    data.largeImageKey,
+    data.largeImageText,
+    data.smallImageKey,
+    data.instance,
+    data.buttons,
+  );
+});

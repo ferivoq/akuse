@@ -4,17 +4,15 @@ var remainingRequests = 90;
 var resetTime = 0;
 var lockUntil = 0;
 
-const delay = async (seconds: number) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+const delay = async (seconds: number) =>
+  new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
 const handleRateLimiting = async (current: number) => {
-  if (current < lockUntil)
-    await delay(lockUntil - current);
+  if (current < lockUntil) await delay(lockUntil - current);
 
-  if (current >= resetTime)
-    remainingRequests = 90;
+  if (current >= resetTime) remainingRequests = 90;
 
-  if (remainingRequests <= 0)
-    await delay(60);
+  if (remainingRequests <= 0) await delay(60);
 };
 
 const handleResponseHeaders = (headers: any) => {
@@ -73,7 +71,11 @@ export const makeRequest = async (
 
       return response.data;
     } catch (error) {
-      let response = (error as { response?: { status: number, headers: { [key: string]: any } } }).response;
+      let response = (
+        error as {
+          response?: { status: number; headers: { [key: string]: any } };
+        }
+      ).response;
 
       if (response && response.status === 429) {
         const retryAfter = parseInt(response.headers['retry-after'] || '60');

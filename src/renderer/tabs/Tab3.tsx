@@ -99,15 +99,14 @@ const Tab3: React.FC = () => {
         ? (format = `format: ${selectedFormat}`)
         : (format = ''),
       selectedSort !== '' ? (sort = `sort: ${selectedSort}`) : (sort = ''),
-      store.get('adult_content') ? '' :
-      'isAdult: false'
+      store.get('adult_content') ? '' : 'isAdult: false',
     ].filter((item) => !(item == ''));
 
     return args.concat('type: ANIME').join(', ');
-  }
+  };
 
   const getSearchAnime = async (newSearch: boolean = false) => {
-    if(!hasNextPage && (page > 1 || !newSearch)) return searchedAnime;
+    if (!hasNextPage && (page > 1 || !newSearch)) return searchedAnime;
 
     const result = newSearch ? [] : searchedAnime;
 
@@ -115,11 +114,10 @@ const Tab3: React.FC = () => {
     const pageInfo = anime.pageInfo as PageInfo;
 
     setHasNextPage(pageInfo.hasNextPage);
-    if(pageInfo.hasNextPage)
-      setPage(page + 1);
+    if (pageInfo.hasNextPage) setPage(page + 1);
 
     return result?.concat(animeDataToListAnimeData(anime));
-  }
+  };
 
   const handleSearchClick = async () => {
     setSearchedAnime([]);
@@ -127,9 +125,7 @@ const Tab3: React.FC = () => {
     setPage(1);
     setHasNextPage(false);
 
-    setSearchedAnime(
-      await getSearchAnime(true)
-    );
+    setSearchedAnime(await getSearchAnime(true));
   };
 
   const handleInputKeydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -144,14 +140,11 @@ const Tab3: React.FC = () => {
     const height = target.scrollHeight - target.offsetHeight;
     const current = Date.now() / 1000;
 
-    if(Math.floor(height - position) > 1 || current - lastUpdate < 1)
-      return;
+    if (Math.floor(height - position) > 1 || current - lastUpdate < 1) return;
 
     setLastUpdate(lastUpdate);
 
-    setSearchedAnime(
-      await getSearchAnime(),
-    );
+    setSearchedAnime(await getSearchAnime());
   };
 
   return (

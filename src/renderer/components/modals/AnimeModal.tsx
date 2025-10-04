@@ -1,7 +1,14 @@
 import './styles/AnimeModal.css';
 
 import { ISource } from '@consumet/extensions';
-import { faCircleExclamation, faStar, faTv, faVolumeHigh, faVolumeXmark, faXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircleExclamation,
+  faStar,
+  faTv,
+  faVolumeHigh,
+  faVolumeXmark,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import Store from 'electron-store';
@@ -24,7 +31,11 @@ import {
   relationsToListAnimeData,
 } from '../../../modules/utils';
 import { ListAnimeData } from '../../../types/anilistAPITypes';
-import { MediaFormat, MediaTypes, RelationTypes } from '../../../types/anilistGraphQLTypes';
+import {
+  MediaFormat,
+  MediaTypes,
+  RelationTypes,
+} from '../../../types/anilistGraphQLTypes';
 import { EpisodeInfo } from '../../../types/types';
 import AnimeSections from '../AnimeSections';
 import { ButtonCircle } from '../Buttons';
@@ -81,7 +92,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({
   const [playerISource, setPlayerISource] = useState<ISource | null>(null);
 
   // other
-  const [providerAnimeId, setProviderAnimeId] = useState<string>()
+  const [providerAnimeId, setProviderAnimeId] = useState<string>();
   const [localProgress, setLocalProgress] = useState<number>();
   const [alternativeBanner, setAlternativeBanner] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -289,18 +300,20 @@ const AnimeModal: React.FC<AnimeModalProps> = ({
 
   const playEpisode = async (provAnimeId: string) => {
     if (trailerRef.current) trailerRef.current.pause();
-    
+
     setShowPlayer(true);
     setLoading(true);
 
-    await getSourceFromProvider(provAnimeId, animeEpisodeNumber).then((video) => {
-      if (!video) {
-        setLoading(false);
-        return;
-      }
-      setPlayerISource(video);
-      setProviderAnimeId(provAnimeId)
-    })
+    await getSourceFromProvider(provAnimeId, animeEpisodeNumber).then(
+      (video) => {
+        if (!video) {
+          setLoading(false);
+          return;
+        }
+        setPlayerISource(video);
+        setProviderAnimeId(provAnimeId);
+      },
+    );
   };
 
   const handleLocalProgressChange = (localProgress: number) => {

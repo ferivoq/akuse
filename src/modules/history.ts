@@ -1,5 +1,10 @@
-import { History, AnimeHistoryEntry, EpisodeHistoryEntry, HistoryEntries } from "../types/historyTypes";
-import Store from "electron-store";
+import {
+  History,
+  AnimeHistoryEntry,
+  EpisodeHistoryEntry,
+  HistoryEntries,
+} from '../types/historyTypes';
+import Store from 'electron-store';
 
 const store = new Store();
 var history = (store.get('history') || { entries: {} }) as History;
@@ -10,7 +15,7 @@ var history = (store.get('history') || { entries: {} }) as History;
  * @returns anime history
  */
 export const getAnimeHistory = (
-  animeId: number
+  animeId: number,
 ): AnimeHistoryEntry | undefined => history.entries[animeId];
 
 /**
@@ -36,37 +41,35 @@ export const getHistory = (): History => history;
  */
 export const getEpisodeHistory = (
   animeId: number,
-  episodeNumber: number
-): EpisodeHistoryEntry | undefined => getAnimeHistory(animeId)?.history[episodeNumber]
-
+  episodeNumber: number,
+): EpisodeHistoryEntry | undefined =>
+  getAnimeHistory(animeId)?.history[episodeNumber];
 
 /**
  * Set local history.
  *
  * @param newHistory
  */
-export const setHistory = (
-  newHistory: History
-) => {
+export const setHistory = (newHistory: History) => {
   history = history;
   store.set('history', newHistory);
-}
+};
 
 /**
  * Update the anime's entry
  *
  * @param animeHistory
  */
-export const setAnimeHistory = (
-  animeHistory: AnimeHistoryEntry
-) => {
+export const setAnimeHistory = (animeHistory: AnimeHistoryEntry) => {
   const listAnimeData = animeHistory.data;
-  const animeId = (listAnimeData.media.id || listAnimeData.media.mediaListEntry && listAnimeData.media.mediaListEntry.id) as number
+  const animeId = (listAnimeData.media.id ||
+    (listAnimeData.media.mediaListEntry &&
+      listAnimeData.media.mediaListEntry.id)) as number;
 
   history.entries[animeId] = animeHistory;
 
   store.set('history', history);
-}
+};
 
 /**
  * Get the last watched episode from an anime.
@@ -75,14 +78,13 @@ export const setAnimeHistory = (
  * @returns last watched episode
  */
 export const getLastWatchedEpisode = (
-  animeId: number
+  animeId: number,
 ): EpisodeHistoryEntry | undefined => {
   const animeHistory = getAnimeHistory(animeId) as AnimeHistoryEntry;
 
-  if(animeHistory === undefined)
-    return;
+  if (animeHistory === undefined) return;
 
   return Object.values(animeHistory?.history).reduce((latest, current) => {
     return current.timestamp > latest.timestamp ? current : latest;
   }, Object.values(animeHistory.history)[0]);
-}
+};

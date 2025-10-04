@@ -1,7 +1,10 @@
 import './styles/Slideshow.css';
 
 import { ISource } from '@consumet/extensions';
-import { faArrowUpRightFromSquare, faPlay } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowUpRightFromSquare,
+  faPlay,
+} from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
 import React, { useEffect, useState } from 'react';
@@ -97,16 +100,14 @@ const Slide: React.FC<SlideProps> = ({ listAnimeData, index, isVisible }) => {
     setLoading(true);
 
     await fetchEpisodesInfo();
-    await getSourceFromProvider(providerAnimeId, 1).then(
-      (video) => {
-        if (!video) {
-          setLoading(false);
-          return;
-        }
-        setPlayerISource(video);
+    await getSourceFromProvider(providerAnimeId, 1).then((video) => {
+      if (!video) {
         setLoading(false);
-      },
-    );
+        return;
+      }
+      setPlayerISource(video);
+      setLoading(false);
+    });
   };
 
   const handleChangeLoading = (value: boolean) => {

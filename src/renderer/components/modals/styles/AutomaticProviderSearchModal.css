@@ -23,7 +23,10 @@
   margin-top: 20px;
 }
 
-.modal-page-wrapper .automatic-provider-search-content .cards-group:hover> :not(:hover) {
+.modal-page-wrapper
+  .automatic-provider-search-content
+  .cards-group:hover
+  > :not(:hover) {
   opacity: 0.7;
 }
 
@@ -64,11 +67,17 @@
   will-change: transform;
 }
 
-.modal-page-wrapper .automatic-provider-search-content .search-container input:focus {
+.modal-page-wrapper
+  .automatic-provider-search-content
+  .search-container
+  input:focus {
   background-color: var(--color-3);
 }
 
-.modal-page-wrapper .automatic-provider-search-content .search-container input::placeholder {
+.modal-page-wrapper
+  .automatic-provider-search-content
+  .search-container
+  input::placeholder {
   color: var(--font-3);
 }
 
@@ -76,7 +85,10 @@
   color: var(--font-1);
 }
 
-.modal-page-wrapper .automatic-provider-search-content .search-container button {
+.modal-page-wrapper
+  .automatic-provider-search-content
+  .search-container
+  button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -90,15 +102,28 @@
   transition: var(--transition);
 }
 
-.modal-page-wrapper .automatic-provider-search-content .search-container button .i {
+.modal-page-wrapper
+  .automatic-provider-search-content
+  .search-container
+  button
+  .i {
   color: var(--font-3);
 }
 
-.modal-page-wrapper .automatic-provider-search-content .search-container button:hover,
-.modal-page-wrapper .automatic-provider-search-content .search-container button:focus {
+.modal-page-wrapper
+  .automatic-provider-search-content
+  .search-container
+  button:hover,
+.modal-page-wrapper
+  .automatic-provider-search-content
+  .search-container
+  button:focus {
   background-color: var(--color-3);
 }
 
-.modal-page-wrapper .automatic-provider-search-content .search-container button:active {
+.modal-page-wrapper
+  .automatic-provider-search-content
+  .search-container
+  button:active {
   background-color: var(--color-2);
 }

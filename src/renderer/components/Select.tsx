@@ -28,7 +28,7 @@ export const Select: React.FC<SelectProps> = ({
   className = '',
   width,
   zIndex = 1,
-  selectedIndex = -1
+  selectedIndex = -1,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   // const [selectedOption, setSelectedOption] = useState<Option>();
@@ -66,9 +66,10 @@ export const Select: React.FC<SelectProps> = ({
   };
 
   // let selectedOption;
-  const selectedOption = selectedIndex === -1 ? options.find(
-    (option) => option.value === selectedValue,
-  ) : options[selectedIndex];
+  const selectedOption =
+    selectedIndex === -1
+      ? options.find((option) => option.value === selectedValue)
+      : options[selectedIndex];
   label = selectedOption?.label ?? '';
   // if(selectedIndex === -1)
   //   setSelectedOption();

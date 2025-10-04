@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import Heading from "../components/Heading";
-import { ListAnimeData } from "../../types/anilistAPITypes";
-import { getAiredAnime } from "../../modules/anilist/anilistApi";
-import { airingDataToListAnimeData } from "../../modules/utils";
-import { Dots } from "react-activity";
-import AnimeEntry from "../components/AnimeEntry";
+import { useEffect, useRef, useState } from 'react';
+import Heading from '../components/Heading';
+import { ListAnimeData } from '../../types/anilistAPITypes';
+import { getAiredAnime } from '../../modules/anilist/anilistApi';
+import { airingDataToListAnimeData } from '../../modules/utils';
+import { Dots } from 'react-activity';
+import AnimeEntry from '../components/AnimeEntry';
 
 interface Tab5Props {
   viewerId: number | null;
@@ -28,10 +28,9 @@ const Tab5: React.FC<Tab5Props> = ({ viewerId }) => {
   useEffect(() => {
     const current = Date.now() / 1000;
 
-    if(!hasPopulated)
-      populateAiredAnime(true);
+    if (!hasPopulated) populateAiredAnime(true);
 
-    if(current - lastUpdate < 5) return;
+    if (current - lastUpdate < 5) return;
 
     setLastUpdate(current);
     fetchData();
@@ -40,10 +39,15 @@ const Tab5: React.FC<Tab5Props> = ({ viewerId }) => {
   const populateAiredAnime = async (addOn: boolean = false) => {
     setHasPopulated(true);
 
-    const airingData = await getAiredAnime(viewerId, 100, timeOffset, searchTime, pageRef.current);
+    const airingData = await getAiredAnime(
+      viewerId,
+      100,
+      timeOffset,
+      searchTime,
+      pageRef.current,
+    );
 
-    if(airingData.pageInfo.hasNextPage)
-      ++pageRef.current;
+    if (airingData.pageInfo.hasNextPage) ++pageRef.current;
     else {
       pageRef.current = 1;
       setSearchTime(searchTime - timeOffset);
@@ -51,10 +55,8 @@ const Tab5: React.FC<Tab5Props> = ({ viewerId }) => {
 
     var listAnimeData = airingDataToListAnimeData(airingData.airingSchedules);
 
-    if(!addOn)
-      setAiredAnime(airedAnime.concat(listAnimeData));
-    else
-      setAiredAnime(listAnimeData.concat(airedAnime));
+    if (!addOn) setAiredAnime(airedAnime.concat(listAnimeData));
+    else setAiredAnime(listAnimeData.concat(airedAnime));
   };
 
   // const getDayName = (date: Date, locale: string) =>
@@ -63,7 +65,6 @@ const Tab5: React.FC<Tab5Props> = ({ viewerId }) => {
   const fetchData = async () => {
     // if(weekAnime) return;
     // const weekSchedule: Option[] = [];
-
     // for(let i = 1; i < 8; i++) {
     //   const endOfDay = new Date();
     //   endOfDay.setHours(24 * i, 0, 0, -1);
@@ -84,8 +85,7 @@ const Tab5: React.FC<Tab5Props> = ({ viewerId }) => {
     const height = target.scrollHeight - target.offsetHeight;
     const current = Date.now() / 1000;
 
-    if(Math.floor(height - position) > 1 || current - lastUpdate < 1)
-      return;
+    if (Math.floor(height - position) > 1 || current - lastUpdate < 1) return;
 
     setLastUpdate(current);
     populateAiredAnime();
@@ -106,7 +106,7 @@ const Tab5: React.FC<Tab5Props> = ({ viewerId }) => {
             selectedLabel={getDayName(new Date(), 'en-US')}
             options={weekAnime}
           />} */}
-          <Heading text="Recently Aired"/>
+          <Heading text="Recently Aired" />
           <div className="entries-container">
             {!airedAnime ? (
               <div className="activity-indicator">
@@ -121,8 +121,7 @@ const Tab5: React.FC<Tab5Props> = ({ viewerId }) => {
         </main>
       </div>
     </div>
-  )
-}
-
+  );
+};
 
 export default Tab5;

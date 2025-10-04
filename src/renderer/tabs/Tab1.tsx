@@ -5,13 +5,13 @@ import { ListAnimeData, UserInfo } from '../../types/anilistAPITypes';
 import { AuthContext } from '../App';
 import AnimeSection from '../components/AnimeSection';
 import Slideshow from '../components/Slideshow';
-import Store from 'electron-store'
+import Store from 'electron-store';
 import Heading from '../components/Heading';
 
-const STORE = new Store()
+const STORE = new Store();
 
 interface Tab1Props {
-  userInfo?: UserInfo
+  userInfo?: UserInfo;
   currentListAnime?: ListAnimeData[];
   trendingAnime?: ListAnimeData[];
   mostPopularAnime?: ListAnimeData[];
@@ -29,18 +29,19 @@ const Tab1: React.FC<Tab1Props> = ({
 }) => {
   // const [fetchedRecommended, setFetchedRecommended] = useState<boolean>(false);
   const hasHistory = useContext(AuthContext);
-  const recommendedFrom = hasHistory &&
-                          recommendedAnime &&
-                          recommendedAnime.length > 0 &&
-                          recommendedAnime[recommendedAnime.length - 1] || undefined;
-  let recommendedTitle = recommendedFrom &&
-                           getTitle(recommendedFrom.media);
+  const recommendedFrom =
+    (hasHistory &&
+      recommendedAnime &&
+      recommendedAnime.length > 0 &&
+      recommendedAnime[recommendedAnime.length - 1]) ||
+    undefined;
+  let recommendedTitle = recommendedFrom && getTitle(recommendedFrom.media);
 
   return (
     <div className="body-container  show-tab">
       <div className="main-container lifted">
         <main>
-          {STORE.get('light_mode') as boolean && <Heading text="Discover" />}
+          {(STORE.get('light_mode') as boolean) && <Heading text="Discover" />}
 
           <Slideshow listAnimeData={trendingAnime} />
 
@@ -55,10 +56,9 @@ const Tab1: React.FC<Tab1Props> = ({
             {hasHistory && recommendedFrom && (
               <AnimeSection
                 title={`Because you watched ${
-                  (recommendedTitle &&
-                  recommendedTitle.length > 58) ?
-                  recommendedTitle.substring(0, 58) + '...' :
-                  recommendedTitle
+                  recommendedTitle && recommendedTitle.length > 58
+                    ? recommendedTitle.substring(0, 58) + '...'
+                    : recommendedTitle
                 }`}
                 animeData={recommendedAnime?.slice(0, -1)}
               />

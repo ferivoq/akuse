@@ -39,14 +39,13 @@ const EpisodeEntry: React.FC<EpisodeEntryProps> = ({
           <img src={cover ?? ''} alt="episode cover" />
           <div
             style={{
-              width: progress + "%"
+              width: progress + '%',
             }}
             className={`progress-bar ${
-              (progress ?? 0) >= 99 ?
-              'full-width' :
-              'partial-width'
-              }`}/>
-          {progress > 0 && <div className='progress-bar-full'/>}
+              (progress ?? 0) >= 99 ? 'full-width' : 'partial-width'
+            }`}
+          />
+          {progress > 0 && <div className="progress-bar-full" />}
         </div>
       ) : (
         <Skeleton className="image" />

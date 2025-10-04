@@ -100,7 +100,7 @@ const AnimeSections: React.FC<AnimeSectionsProps> = ({
       onMouseLeave={handleMouseLeave}
       id={`${id.toLowerCase().replace(' ', '-')}-section`}
     >
-      <div style={{marginTop: 20}}>
+      <div style={{ marginTop: 20 }}>
         <Select
           options={filteredOptions}
           selectedValue={animeData}

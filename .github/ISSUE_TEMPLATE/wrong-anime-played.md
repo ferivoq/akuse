@@ -4,7 +4,6 @@ about: Report an incorrectly played anime.
 title: ''
 labels: wrong anime
 assignees: ''
-
 ---
 
 **Details**

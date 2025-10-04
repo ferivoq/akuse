@@ -8,7 +8,12 @@ import {
   MostPopularAnime,
   TrendingAnime,
 } from '../../types/anilistAPITypes';
-import { AiringPage, AiringSchedule, Media, MediaListStatus} from '../../types/anilistGraphQLTypes';
+import {
+  AiringPage,
+  AiringSchedule,
+  Media,
+  MediaListStatus,
+} from '../../types/anilistGraphQLTypes';
 import { ClientData } from '../../types/types';
 import { clientData } from '../clientData';
 import isAppImage from '../packaging/isAppImage';
@@ -89,7 +94,7 @@ const RECOMMEND_DATA: string = `
               }
             }
           }
-        }`
+        }`;
 const MEDIA_DATA: string = `
         id
         idMal
@@ -231,8 +236,7 @@ const MEDIA_DATA: string = `
         ${RECOMMEND_DATA}
     `;
 
-const filterAdultMedia = (media?: Media) =>
-  media && !media.isAdult;
+const filterAdultMedia = (media?: Media) => media && !media.isAdult;
 
 /**
  * Retrieves the access token for the api
@@ -361,18 +365,19 @@ export const getViewerLists = async (
 
   var variables = {
     userId: viewerId,
-    statuses: statuses
+    statuses: statuses,
   };
 
   const options = getOptions(query, variables);
 
   const respData = await makeRequest(METHOD, GRAPH_QL_URL, headers, options);
 
-  const lists = respData.data.MediaListCollection.lists.length === 0
-  ? []
-  : (respData.data.MediaListCollection.lists as Array<any>);
+  const lists =
+    respData.data.MediaListCollection.lists.length === 0
+      ? []
+      : (respData.data.MediaListCollection.lists as Array<any>);
 
-  return lists.map(value => value.entries).flat();
+  return lists.map((value) => value.entries).flat();
 };
 
 /**
@@ -452,7 +457,10 @@ export const getFollowingUsers = async (viewerId: any) => {
   const respData = await makeRequest(METHOD, GRAPH_QL_URL, headers, options);
 };
 
-const sanitizeString = (input: string) => JSON.stringify(input).slice(1, -1).replace(/[{};`\\"'\!]/g, '');
+const sanitizeString = (input: string) =>
+  JSON.stringify(input)
+    .slice(1, -1)
+    .replace(/[{};`\\"'\!]/g, '');
 
 /**
  * Gets a list of anime from a list of titles.
@@ -467,50 +475,56 @@ export const getAnimesFromTitles = async (titles: string[]) => {
 
   const results: ListAnimeData[] = [];
   const headers: any = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
 
   for (let index = 0; index < titles.length; index++) {
-      const value = titles[index];
-      const id: string = `anime${query_variables.length}`;
+    const value = titles[index];
+    const id: string = `anime${query_variables.length}`;
 
-      query_variables.push(`$${id}: String`);
-      search_text.push(`    ${id}: Media(search: $${id}, type: ANIME) { ${MEDIA_DATA} }`);
-      variables[id] = sanitizeString(value).replaceAll('Part', '');
+    query_variables.push(`$${id}: String`);
+    search_text.push(
+      `    ${id}: Media(search: $${id}, type: ANIME) { ${MEDIA_DATA} }`,
+    );
+    variables[id] = sanitizeString(value).replaceAll('Part', '');
 
-      if (query_variables.length > 2 || index === titles.length - 1) {
-          const query = `
-              query(${query_variables.join(", ")}) {
-              ${search_text.join("\n")}
+    if (query_variables.length > 2 || index === titles.length - 1) {
+      const query = `
+              query(${query_variables.join(', ')}) {
+              ${search_text.join('\n')}
               }
           `;
-          try {
-            const options = getOptions(query, variables);
-            const respData = await makeRequest(METHOD, GRAPH_QL_URL, headers, options);
+      try {
+        const options = getOptions(query, variables);
+        const respData = await makeRequest(
+          METHOD,
+          GRAPH_QL_URL,
+          headers,
+          options,
+        );
 
-            for (let i = 0; i < query_variables.length; i++) {
-                const id = `anime${i}`;
-                results.push({
-                    id: null,
-                    mediaId: null,
-                    progress: null,
-                    media: respData.data[id],
-                });
-            }
-          } catch (error) {
-            console.log('Batch search error:', error);
-          }
-
-          query_variables = [];
-          variables = {};
-          search_text = [];
+        for (let i = 0; i < query_variables.length; i++) {
+          const id = `anime${i}`;
+          results.push({
+            id: null,
+            mediaId: null,
+            progress: null,
+            media: respData.data[id],
+          });
+        }
+      } catch (error) {
+        console.log('Batch search error:', error);
       }
+
+      query_variables = [];
+      variables = {};
+      search_text = [];
+    }
   }
 
   return results;
 };
-
 
 /**
  * Gets the info from an anime
@@ -527,20 +541,20 @@ export const getAnimeInfo = async (animeId: any): Promise<Media> => {
           }
       `;
 
-      var headers: {[key: string]: string} = {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      };
+  var headers: { [key: string]: string } = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
 
-      if (STORE.has('access_token'))
-        headers.Authorization = 'Bearer ' + STORE.get('access_token');
+  if (STORE.has('access_token'))
+    headers.Authorization = 'Bearer ' + STORE.get('access_token');
 
-      var variables = {
-        id: animeId,
-      };
+  var variables = {
+    id: animeId,
+  };
 
-      const options = getOptions(query, variables);
-      const respData = await makeRequest(METHOD, GRAPH_QL_URL, headers, options);
+  const options = getOptions(query, variables);
+  const respData = await makeRequest(METHOD, GRAPH_QL_URL, headers, options);
 
   return respData.data.Media as Media;
 };
@@ -601,9 +615,11 @@ export const getAiredAnime = async (
 
   const adultContent = STORE.get('adult_content') as boolean;
   if (!adultContent)
-    pageData.airingSchedules = pageData.airingSchedules.filter((value) => filterAdultMedia(value.media));
+    pageData.airingSchedules = pageData.airingSchedules.filter((value) =>
+      filterAdultMedia(value.media),
+    );
 
-  return pageData
+  return pageData;
 };
 
 /**
@@ -615,7 +631,7 @@ export const getAiredAnime = async (
 
 export const getAiringSchedule = async (
   viewerId: number | null,
-  airingAt: number = Math.floor(Date.now() / 1000)
+  airingAt: number = Math.floor(Date.now() / 1000),
 ) => {
   const query = `
   query {
@@ -653,7 +669,9 @@ export const getAiringSchedule = async (
 
   const adultContent = STORE.get('adult_content') as boolean;
   if (!adultContent)
-    pageData.airingSchedules = pageData.airingSchedules.filter((value) => filterAdultMedia(value.media));
+    pageData.airingSchedules = pageData.airingSchedules.filter((value) =>
+      filterAdultMedia(value.media),
+    );
 
   return pageData.airingSchedules as AiringSchedule[];
 };
@@ -794,7 +812,7 @@ export const getNextReleases = async (viewerId: number | null) => {
 export const searchFilteredAnime = async (
   args: string,
   viewerId: number | null,
-  page: number = 1
+  page: number = 1,
 ): Promise<AnimeData> => {
   var query = `
       {
@@ -1009,7 +1027,7 @@ export const deleteAnimeFromList = async (id: any): Promise<boolean> => {
     const options = getOptions(query, variables);
     const respData = await makeRequest(METHOD, GRAPH_QL_URL, headers, options);
 
-    return respData
+    return respData;
   } catch (error) {
     console.log(error);
     return false;

@@ -1,8 +1,8 @@
-import { IVideo, IAnimeEpisode } from "@consumet/extensions"
+import { IVideo, IAnimeEpisode } from '@consumet/extensions';
 
 export default class ProviderCache {
-  search: { [key: string]:  IVideo[] | null};
-  animeIds: { [key: string]: string | null};
+  search: { [key: string]: IVideo[] | null };
+  animeIds: { [key: string]: string | null };
   episodes: { [key: string]: IAnimeEpisode[] | undefined };
 
   constructor() {

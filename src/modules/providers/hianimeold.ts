@@ -1,4 +1,7 @@
-import { UnifiedMediaResult, UnifiedSources } from 'sofamaxxing.ts/dist/models/unifiedTypes';
+import {
+  UnifiedMediaResult,
+  UnifiedSources,
+} from 'sofamaxxing.ts/dist/models/unifiedTypes';
 import HiAnime from 'sofamaxxing.ts/dist/providers/HiAnime';
 
 import ProviderCache from './cache';
@@ -33,7 +36,7 @@ class HiAnimeAPI {
     // start searching
     for (const animeSearch of animeTitles) {
       // search anime (per dub too)
-      const searchResults = await api.search(animeSearch)
+      const searchResults = await api.search(animeSearch);
 
       // find the best result: first check for same name,
       // then check for same release date.
@@ -58,19 +61,19 @@ class HiAnimeAPI {
     dubbed: boolean,
   ): Promise<UnifiedSources | null> => {
     const mediaInfo = await api.fetchInfo(animeId);
-    console.log(mediaInfo)
+    console.log(mediaInfo);
 
     let episodeId =
       mediaInfo?.episodes?.find((ep: any) => ep.number == episode)?.id ?? null;
 
     if (episodeId) {
-      console.log(episodeId)
+      console.log(episodeId);
       // if (dubbed) {
       //   episodeId = episodeId.replace('both', 'dub');
       // }
 
       const sources = await api.fetchSources(episodeId);
-      console.log(sources)
+      console.log(sources);
       return sources as UnifiedSources;
     }
 

@@ -4,9 +4,7 @@ import ReactDOM from 'react-dom';
 import { ModalPage, ModalPageShadow, ModalPageSizeableContent } from './Modal';
 import { useRef, useState } from 'react';
 import { ButtonMain } from '../Buttons';
-import {
-  faCloudDownload,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCloudDownload } from '@fortawesome/free-solid-svg-icons';
 import DOMPurify from 'dompurify';
 import { ipcRenderer } from 'electron';
 

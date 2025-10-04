@@ -3,7 +3,6 @@ import {
   UnifiedSources,
 } from 'sofamaxxing.ts/dist/models/unifiedTypes';
 
-
 import ProviderCache from './cache';
 import Gogoanime from '@consumet/extensions/dist/providers/anime/gogoanime';
 
