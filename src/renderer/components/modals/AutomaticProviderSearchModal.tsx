@@ -102,13 +102,15 @@ const AutomaticProviderSearchModal: React.FC<{
       listAnimeData!,
       episode!,
     );
-    providerResult && setResults([providerResult]);
-
-    setLoading(false);
-    if (!providerResult)
+    if (providerResult) {
+      setResults([providerResult]);
+      setFeedbackText('');
+    } else {
       setFeedbackText(
         'Automatic title matching failed. Please try searching manually.',
       );
+    }
+    setLoading(false);
   };
 
   const searchInProvider = async () => {
@@ -116,11 +118,13 @@ const AutomaticProviderSearchModal: React.FC<{
     setLoading(true);
 
     const providerResults = await searchInProviderApi(selectedTitle);
-    providerResults && setResults(providerResults);
-
-    setLoading(false);
-    if (!providerResults || providerResults.length === 0)
+    if (providerResults && providerResults.length > 0) {
+      setResults(providerResults);
+      setFeedbackText('');
+    } else {
       setFeedbackText('No results found.');
+    }
+    setLoading(false);
   };
 
   // modal is opened
