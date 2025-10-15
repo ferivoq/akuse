@@ -60,14 +60,12 @@ interface AnimeModalProps {
   listAnimeData: ListAnimeData;
   show: boolean;
   onClose: () => void;
-  ref?: React.RefObject<HTMLDivElement>;
 }
 
 const AnimeModal: React.FC<AnimeModalProps> = ({
   listAnimeData,
   show,
   onClose,
-  ref,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const trailerRef = useRef<HTMLVideoElement>(null);
@@ -184,8 +182,12 @@ const AnimeModal: React.FC<AnimeModalProps> = ({
   useEffect(() => {
     if (!onScreen) return;
     try {
-      if (show && trailerRef.current && canRePlayTrailer)
-        trailerRef.current.play();
+      if (show && trailerRef.current && canRePlayTrailer) {
+        const p = trailerRef.current.play();
+        if (p && typeof (p as any).catch === 'function') {
+          (p as Promise<void>).catch(() => {});
+        }
+      }
       setTrailerVolumeOn(STORE.get('trailer_volume_on') as boolean);
     } catch (error) {
       console.log(error);
@@ -271,7 +273,12 @@ const AnimeModal: React.FC<AnimeModalProps> = ({
 
   const handleTrailerLoad = () => {
     try {
-      if (trailerRef.current) trailerRef.current.play();
+      if (trailerRef.current) {
+        const p = trailerRef.current.play();
+        if (p && typeof (p as any).catch === 'function') {
+          (p as Promise<void>).catch(() => {});
+        }
+      }
       setCanRePlayTrailer(true);
     } catch (error) {
       console.log(error);
@@ -308,6 +315,14 @@ const AnimeModal: React.FC<AnimeModalProps> = ({
       (video) => {
         if (!video) {
           setLoading(false);
+          setShowPlayer(false);
+          toast.error(
+            'Could not load this episode from the selected provider.',
+          );
+          try {
+            STORE.set('source_flag', 'ZORO');
+            setShowAutomaticProviderSerchModal(true);
+          } catch {}
           return;
         }
         setPlayerISource(video);
@@ -361,7 +376,7 @@ const AnimeModal: React.FC<AnimeModalProps> = ({
       )}
 
       <ModalPageShadow show={show} />
-      <ModalPage modalRef={ref} show={show} closeModal={closeModal}>
+      <ModalPage show={show} closeModal={closeModal}>
         <div className="anime-page" onClick={handleClickOutside}>
           <div className="content-wrapper" ref={modalRef}>
             <button className="exit" onClick={() => closeModal()}>
