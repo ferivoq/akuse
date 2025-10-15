@@ -6,18 +6,32 @@ on:
 
 jobs:
   build:
-    name: Build (${{ matrix.os }})
+    name: Build (${{ matrix.name }})
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'create' && github.event.ref_type == 'tag')
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - name: linux
+            os: ubuntu-latest
+            kind: linux
             packageScript: npm run package:linux
-          - os: macos-13
-            packageScript: npm run package:mac
-          - os: windows-latest
+
+          - name: windows
+            os: windows-latest
+            kind: win
             packageScript: npm run package:win
+
+          - name: mac-arm64
+            os: macos-14
+            kind: mac
+            arch: arm64
+
+          - name: mac-x64
+            os: macos-13
+            kind: mac
+            arch: x64
+
     runs-on: ${{ matrix.os }}
     env:
       ANILIST_CLIENT_ID: ${{ secrets.ANILIST_CLIENT_ID }}
@@ -67,13 +81,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build and package
+      - name: Build and package (Linux/Windows)
+        if: matrix.kind != 'mac'
         run: ${{ matrix.packageScript }}
+
+      - name: Build and package (macOS arch-specific)
+        if: matrix.kind == 'mac'
+        shell: bash
+        run: |
+          npx ts-node ./.erb/scripts/clean.js dist
+          npm run build
+          npx electron-builder build --mac --${{ matrix.arch }} --publish never
+          npm run build:dll
+
+          for f in release/build/*.dmg; do
+            [[ -e "$f" ]] || continue
+            mv "$f" "${f%.dmg}-${{ matrix.arch }}.dmg"
+          done
+
+          rm -f release/build/*.zip || true
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ runner.os }}-artifacts
+          name: ${{ matrix.name }}-artifacts
           path: release/build/**
           if-no-files-found: error
 
@@ -96,6 +127,10 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            release/build/**
+            release/build/win-*.exe
+            release/build/linux-*.AppImage
+            release/build/linux-*.deb
+            release/build/*-arm64.dmg
+            release/build/*-x64.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
