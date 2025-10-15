@@ -1,0 +1,92 @@
+name: Build and (optionally) Release
+
+on:
+  workflow_dispatch:
+  create:
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'create' && github.event.ref_type == 'tag')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            packageScript: npm run package:linux
+          - os: macos-latest
+            packageScript: npm run package:mac
+          - os: windows-latest
+            packageScript: npm run package:win
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          # Required by AppImage packaging on Ubuntu 22.04+
+          sudo apt-get install -y libfuse2
+          # Helpful runtime libs for Electron (defensive)
+          sudo apt-get install -y libnss3 libxss1 libgbm1 libasound2 libgtk-3-0
+
+      - name: Cache Electron artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+          key: ${{ runner.os }}-electron-cache-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-electron-cache-
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Use your package scripts which are configured with --publish never
+      - name: Build and package
+        run: ${{ matrix.packageScript }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          ELECTRON_SKIP_NOTARIZE: '1'
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ runner.os }}-artifacts
+          path: release/build/**
+          if-no-files-found: error
+
+  release:
+    name: Create GitHub Release and upload assets
+    if: github.event_name == 'create' && github.event.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          # Merge all OS artifacts into workspace so we can upload together
+          merge-multiple: true
+
+      - name: Create Release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            release/build/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
