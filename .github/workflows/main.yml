@@ -14,7 +14,7 @@ jobs:
         include:
           - os: ubuntu-latest
             packageScript: npm run package:linux
-          - os: macos-latest
+          - os: macos-13
             packageScript: npm run package:mac
           - os: windows-latest
             packageScript: npm run package:win
