@@ -312,8 +312,26 @@ const VideoPlayer: React.FC<{
 
   useEffect(() => {
     if (source !== null) {
-      const bestVideo = getBestQualityVideo(source.sources);
-      playSource(bestVideo, source.headers, source.subtitles);
+      let bestVideoLocal: IVideo | undefined;
+      try {
+        if (!source.sources || source.sources.length === 0) {
+          toast.error('No playable sources returned from provider.');
+          onChangeLoading(false);
+          return;
+        }
+        bestVideoLocal = getBestQualityVideo(source.sources);
+        if (!bestVideoLocal || !bestVideoLocal.url) {
+          toast.error('No valid video URL available.');
+          onChangeLoading(false);
+          return;
+        }
+        playSource(bestVideoLocal, source.headers, source.subtitles);
+      } catch (e) {
+        console.log('playback setup error', e);
+        toast.error('Failed to prepare playback.');
+        onChangeLoading(false);
+        return;
+      }
 
       // resume from tracked progress
       const animeId = (listAnime.media.id ||
@@ -340,7 +358,9 @@ const VideoPlayer: React.FC<{
 
       setShowNextEpisodeButton(canNextEpisode(animeEpisodeNumber));
       setShowPreviousEpisodeButton(canPreviousEpisode(animeEpisodeNumber));
-      getSkipEvents(animeEpisodeNumber, bestVideo);
+      if (bestVideoLocal) {
+        getSkipEvents(animeEpisodeNumber, bestVideoLocal);
+      }
     }
   }, [source, listAnime]);
 
@@ -386,6 +406,11 @@ const VideoPlayer: React.FC<{
     } else {
       if (videoRef.current) {
         videoRef.current.src = video.url;
+
+        const p = videoRef.current.play?.();
+        if (p && typeof (p as any).catch === 'function') {
+          (p as Promise<void>).catch(() => {});
+        }
       }
     }
   };
@@ -472,7 +497,10 @@ const VideoPlayer: React.FC<{
       try {
         if (!isPlaying()) {
           setPlaying(true);
-          videoRef.current.play();
+          const p = videoRef.current.play();
+          if (p && typeof (p as any).catch === 'function') {
+            (p as Promise<void>).catch(() => {});
+          }
         }
       } catch (error) {
         console.log(error);
