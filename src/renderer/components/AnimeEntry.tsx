@@ -70,7 +70,6 @@ const AnimeEntry: React.FC<{
     <>
       {listAnimeData && hasModalBeenShowed && (
         <AnimeModal
-          ref={modalRef}
           listAnimeData={listAnimeData}
           show={showModal}
           onClose={() => setShowModal(false)}
