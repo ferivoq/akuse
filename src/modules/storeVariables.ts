@@ -7,7 +7,7 @@ const defaultValues = {
   update_progress: true,
   autoplay_next: true,
   dubbed: false,
-  source_flag: 'YUKI',
+  source_flag: 'ZORO',
   subtitle_language: 'English',
   intro_skip_time: 85,
   key_press_skip: 5,
@@ -30,32 +30,11 @@ export const setDefaultStoreVariables = () => {
 
 export const getSourceFlag = async (): Promise<Provider | null> => {
   switch (STORE.get('source_flag')) {
-    case 'HIANIME': {
-      return 'HIANIME';
-    }
-    case 'GOGOANIME': {
-      return 'GOGOANIME';
-    }
-    case 'YUKI': {
-      return 'YUKI';
-    }
-    case 'MAZE': {
-      return 'MAZE';
-    }
-    case 'PAHE': {
-      return 'PAHE';
-    }
-    case 'ANIMEPARADISE': {
-      return 'ANIMEPARADISE';
-    }
-    case 'ANIMEHEAVEN': {
-      return 'ANIMEHEAVEN';
-    }
-    case 'ANIMEUNITY': {
-      return 'ANIMEUNITY';
+    case 'ZORO': {
+      return 'ZORO';
     }
     default: {
-      return null;
+      return 'ZORO';
     }
   }
 };
@@ -71,7 +50,13 @@ export const getProviderSearchMatch = (
   console.log(key);
   console.log(cache[key]);
 
-  return cache[key] ?? null;
+  const cachedValue = cache[key];
+
+  if (!cachedValue || !cachedValue.id) {
+    return null;
+  }
+
+  return cachedValue;
 };
 
 /**

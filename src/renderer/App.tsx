@@ -80,7 +80,20 @@ export default function App() {
   }, []);
 
   const updateRecommended = async (history: ListAnimeData[]) => {
-    const animeData = history[Math.floor(Math.random() * (history.length - 1))];
+    if (!history || history.length === 0) {
+      setRecommendedAnime([]);
+      return;
+    }
+    // If only one item, just use it
+    const animeData =
+      history.length === 1
+        ? history[0]
+        : history[Math.floor(Math.random() * history.length)];
+
+    if (!animeData || !animeData.media) {
+      setRecommendedAnime([]);
+      return;
+    }
 
     if (animeData.media.recommendations === undefined) {
       animeData.media = await getAnimeInfo(animeData.media.id);
@@ -91,18 +104,17 @@ export default function App() {
       }
     }
 
-    const recommendedList = animeData.media.recommendations?.nodes.map(
-      (value) => {
+    const recommendedList =
+      animeData.media.recommendations?.nodes.map((value) => {
         return {
           id: null,
           mediaId: null,
           progress: null,
           media: value.mediaRecommendation,
         } as ListAnimeData;
-      },
-    );
+      }) || [];
 
-    recommendedList?.push(animeData);
+    recommendedList.push(animeData);
 
     setRecommendedAnime(recommendedList);
   };

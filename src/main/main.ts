@@ -1,4 +1,5 @@
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
+import * as consumet from '../modules/providers/consumet';
 import Store from 'electron-store';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
@@ -118,6 +119,71 @@ ipcMain.handle('get-is-packaged', async () => {
   return app.isPackaged;
 });
 
+// IPC handlers for consumet.ts anime providers
+ipcMain.handle('consumet:search', async (_event, provider, query) => {
+  try {
+    console.log(
+      `[IPC] consumet:search - provider: ${provider}, query: ${query}`,
+    );
+  } catch (e) {}
+  try {
+    const result = await consumet.searchAnime(provider, query);
+    try {
+      console.log(`[IPC] consumet:search result:`, result);
+    } catch (e) {}
+    return result;
+  } catch (e: any) {
+    try {
+      console.error('[IPC] consumet:search failed', e.message || e);
+    } catch (err) {}
+    return [];
+  }
+});
+
+ipcMain.handle('consumet:fetchInfo', async (_event, provider, id) => {
+  try {
+    console.log(`[IPC] consumet:fetchInfo - provider: ${provider}, id: ${id}`);
+  } catch (e) {}
+  try {
+    const result = await consumet.fetchAnimeInfo(provider, id);
+    try {
+      console.log(`[IPC] consumet:fetchInfo result:`, result);
+    } catch (e) {}
+    return result;
+  } catch (e: any) {
+    try {
+      console.error('[IPC] consumet:fetchInfo failed', e.message || e);
+    } catch (err) {}
+    return null;
+  }
+});
+
+ipcMain.handle(
+  'consumet:fetchEpisodeSources',
+  async (_event, provider, episodeId) => {
+    try {
+      console.log(
+        `[IPC] consumet:fetchEpisodeSources - provider: ${provider}, episodeId: ${episodeId}`,
+      );
+    } catch (e) {}
+    try {
+      const result = await consumet.fetchEpisodeSources(provider, episodeId);
+      try {
+        console.log(`[IPC] consumet:fetchEpisodeSources result:`, result);
+      } catch (e) {}
+      return result;
+    } catch (e: any) {
+      try {
+        console.error(
+          '[IPC] consumet:fetchEpisodeSources failed',
+          e.message || e,
+        );
+      } catch (err) {}
+      return null;
+    }
+  },
+);
+
 ipcMain.on('open-login-url', () => {
   require('electron').shell.openExternal(authUrl);
 });
@@ -125,7 +191,9 @@ ipcMain.on('open-login-url', () => {
 ipcMain.on('logout', () => {
   STORE.set('logged', false);
   STORE.delete('access_token');
-  console.log('Logged Out! Relaunching app...');
+  try {
+    console.log('Logged Out! Relaunching app...');
+  } catch (e) {}
 
   if (mainWindow) mainWindow.reload();
 });
@@ -199,7 +267,9 @@ if (!gotTheLock) {
         mainWindow.reload();
       }
     } catch (error: any) {
-      console.log('something went wrong second-instance', error.message);
+      try {
+        console.log('something went wrong second-instance', error.message);
+      } catch (e) {}
     }
   });
 }
@@ -231,7 +301,11 @@ app.on('open-url', async (event, url) => {
       'Login failed',
       'An error occurred while trying to log in.',
     );
-    console.log('login failed error:', error.message);
+    try {
+      console.log('login failed error:', error.message);
+    } catch (logError) {
+      // Ignore console logging errors
+    }
   }
 });
 
@@ -241,7 +315,11 @@ async function handleLogin(code: any) {
     STORE.set('access_token', token);
     STORE.set('logged', true);
   } catch (error: any) {
-    console.log('login failed with error: ' + error.message);
+    try {
+      console.log('login failed with error: ' + error.message);
+    } catch (logError) {
+      // Ignore console logging errors
+    }
   }
 }
 

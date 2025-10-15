@@ -1,17 +1,12 @@
 import 'dotenv/config';
 
 import Store from 'electron-store';
+import { ipcRenderer } from 'electron';
 
 import { ListAnimeData } from '../../types/anilistAPITypes';
 import { animeCustomTitles } from '../animeCustomTitles';
 import { getParsedAnimeTitles } from '../utils';
-import AnimeHeavenAPI from './animeheaven';
-import AnimeUnityApi from './animeunity';
-import GogoanimeApi from './gogoanime';
-import HiAnimeAPI from './hianime';
-import AniPlayAPI from './aniplay';
 import axios from 'axios';
-import AnimeParadiseAPI from './animeparadise';
 
 const STORE = new Store();
 
@@ -20,37 +15,8 @@ export const searchInProvider = async (query: string) => {
   const dubbed = (await STORE.get('dubbed')) as boolean;
 
   switch (lang) {
-    case 'HIANIME': {
-      const api = new HiAnimeAPI();
-      return await api.searchInProvider(query, dubbed);
-    }
-    case 'GOGOANIME': {
-      const api = new GogoanimeApi();
-      return await api.searchInProvider(query, dubbed);
-    }
-    case 'YUKI': {
-      const api = new AniPlayAPI();
-      return await api.searchInProvider(query, dubbed);
-    }
-    case 'MAZE': {
-      const api = new AniPlayAPI();
-      return await api.searchInProvider(query, dubbed);
-    }
-    case 'PAHE': {
-      const api = new AniPlayAPI();
-      return await api.searchInProvider(query, dubbed);
-    }
-    case 'ANIMEPARADISE': {
-      const api = new AnimeParadiseAPI();
-      return await api.searchInProvider(query, dubbed);
-    }
-    case 'ANIMEHEAVEN': {
-      const api = new AnimeHeavenAPI();
-      return await api.searchInProvider(query, dubbed);
-    }
-    case 'ANIMEUNITY': {
-      const api = new AnimeUnityApi();
-      return await api.searchInProvider(query, dubbed);
+    case 'ZORO': {
+      return await ipcRenderer.invoke('consumet:search', 'zoro', query);
     }
   }
 
@@ -71,80 +37,28 @@ export const searchAutomaticMatchInProvider = async (
   const animeTitles = getParsedAnimeTitles(listAnimeData.media);
   if (customTitle) animeTitles.unshift(customTitle.title);
 
-  console.log(lang + ' ' + dubbed + ' ' + customTitle?.title);
+  console.log(
+    '[API] searchAutomaticMatchInProvider - lang:',
+    lang,
+    'dubbed:',
+    dubbed,
+    'animeTitles:',
+    animeTitles,
+  );
 
   switch (lang) {
-    case 'HIANIME': {
-      const api = new HiAnimeAPI();
-      return await api.searchMatchInProvider(
-        animeTitles,
-        customTitle ? customTitle.index : 0,
-        dubbed,
-        listAnimeData.media.startDate?.year ?? 0,
+    case 'ZORO': {
+      console.log(
+        '[Renderer] Calling consumet:search for zoro with title:',
+        animeTitles[0],
       );
-    }
-    case 'GOGOANIME': {
-      const api = new GogoanimeApi();
-      return await api.searchMatchInProvider(
-        animeTitles,
-        customTitle ? customTitle.index : 0,
-        dubbed,
-        listAnimeData.media.startDate?.year ?? 0,
+      const results = await ipcRenderer.invoke(
+        'consumet:search',
+        'zoro',
+        animeTitles[0],
       );
-    }
-    case 'ANIMEPARADISE': {
-      const api = new AnimeParadiseAPI();
-      return await api.searchMatchInProvider(
-        animeTitles,
-        customTitle ? customTitle.index : 0,
-        dubbed,
-        listAnimeData.media.startDate?.year ?? 0,
-      );
-    }
-    case 'ANIMEHEAVEN': {
-      const api = new AnimeHeavenAPI();
-      return await api.searchMatchInProvider(
-        animeTitles,
-        customTitle ? customTitle.index : 0,
-        dubbed,
-        listAnimeData.media.startDate?.year ?? 0,
-      );
-    }
-    case 'YUKI': {
-      const api = new AniPlayAPI();
-      return await api.searchMatchInProvider(
-        animeTitles,
-        customTitle ? customTitle.index : 0,
-        dubbed,
-        listAnimeData.media.startDate?.year ?? 0,
-      );
-    }
-    case 'MAZE': {
-      const api = new AniPlayAPI();
-      return await api.searchMatchInProvider(
-        animeTitles,
-        customTitle ? customTitle.index : 0,
-        dubbed,
-        listAnimeData.media.startDate?.year ?? 0,
-      );
-    }
-    case 'PAHE': {
-      const api = new AniPlayAPI();
-      return await api.searchMatchInProvider(
-        animeTitles,
-        customTitle ? customTitle.index : 0,
-        dubbed,
-        listAnimeData.media.startDate?.year ?? 0,
-      );
-    }
-    case 'ANIMEUNITY': {
-      const api = new AnimeUnityApi();
-      return await api.searchMatchInProvider(
-        animeTitles,
-        customTitle ? customTitle.index : 0,
-        dubbed,
-        listAnimeData.media.startDate?.year ?? 0,
-      );
+      console.log('[Renderer] consumet:search returned:', results);
+      return results && results.length > 0 ? results[0] : null;
     }
   }
 
@@ -159,72 +73,33 @@ export const getSourceFromProvider = async (
   const dubbed = (await STORE.get('dubbed')) as boolean;
 
   switch (lang) {
-    case 'HIANIME': {
-      const api = new HiAnimeAPI();
-      const source = await api.getEpisodeSource(
+    case 'ZORO': {
+      console.log('[Renderer] Fetching anime info for zoro:', providerAnimeId);
+      const animeInfo = await ipcRenderer.invoke(
+        'consumet:fetchInfo',
+        'zoro',
         providerAnimeId,
-        episode,
-        dubbed,
       );
 
-      return source;
-    }
-    case 'GOGOANIME': {
-      const api = new GogoanimeApi();
-      const source = await api.getEpisodeSource(providerAnimeId, episode);
+      if (!animeInfo || !animeInfo.episodes) {
+        console.error('[Renderer] No episodes found in anime info');
+        return null;
+      }
 
-      return source;
-    }
-    case 'ANIMEPARADISE': {
-      const api = new AnimeParadiseAPI();
-      const source = await api.getEpisodeSource(providerAnimeId, episode);
-
-      return source;
-    }
-    case 'ANIMEHEAVEN': {
-      const api = new AnimeHeavenAPI();
-      const source = await api.getEpisodeSource(providerAnimeId, episode);
-
-      return source;
-    }
-    case 'YUKI': {
-      const api = new AniPlayAPI();
-      const source = await api.getEpisodeSource(
-        providerAnimeId,
-        episode,
-        'yuki',
-        dubbed,
+      const episodeData = animeInfo.episodes.find(
+        (ep: any) => ep.number === episode,
       );
+      if (!episodeData) {
+        console.error(`[Renderer] Episode ${episode} not found`);
+        return null;
+      }
 
-      return source;
-    }
-    case 'MAZE': {
-      const api = new AniPlayAPI();
-      const source = await api.getEpisodeSource(
-        providerAnimeId,
-        episode,
-        'maze',
-        dubbed,
+      console.log('[Renderer] Found episode:', episodeData.id);
+      return await ipcRenderer.invoke(
+        'consumet:fetchEpisodeSources',
+        'zoro',
+        episodeData.id,
       );
-
-      return source;
-    }
-    case 'PAHE': {
-      const api = new AniPlayAPI();
-      const source = await api.getEpisodeSource(
-        providerAnimeId,
-        episode,
-        'pahe',
-        dubbed,
-      );
-
-      return source;
-    }
-    case 'ANIMEUNITY': {
-      const api = new AnimeUnityApi();
-      const source = await api.getEpisodeSource(providerAnimeId, episode);
-
-      return source;
     }
   }
 

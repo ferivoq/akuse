@@ -11,15 +11,7 @@ import Select from '../components/Select';
 
 const STORE = new Store();
 
-export type Provider =
-  | 'HIANIME'
-  | 'GOGOANIME'
-  | 'YUKI'
-  | 'MAZE'
-  | 'PAHE'
-  | 'ANIMEPARADISE'
-  | 'ANIMEHEAVEN'
-  | 'ANIMEUNITY';
+export type Provider = 'ZORO';
 
 interface Option {
   value: any;
@@ -27,14 +19,7 @@ interface Option {
 }
 
 export const LANGUAGE_OPTIONS: Option[] = [
-  { value: 'YUKI', label: '🇺🇸 Yuki' },
-  { value: 'ANIMEUNITY', label: '🇮🇹 AnimeUnity' },
-  { value: 'MAZE', label: '🇺🇸 Maze' },
-  { value: 'PAHE', label: '🇺🇸 Pahe' },
-  { value: 'ANIMEPARADISE', label: '🇺🇸 AnimeParadise' },
-  { value: 'ANIMEHEAVEN', label: '🇺🇸 AnimeHeaven' },
-  { value: 'HIANIME', label: '🌍 HiAnime' },
-  { value: 'GOGOANIME', label: '🇺🇸 Gogoanime' },
+  { value: 'ZORO', label: '🇺🇸 Zoro (HiAnime)' },
 ];
 
 const Element: React.FC<{
