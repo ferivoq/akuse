@@ -19,6 +19,13 @@ jobs:
           - os: windows-latest
             packageScript: npm run package:win
     runs-on: ${{ matrix.os }}
+    env:
+      ANILIST_CLIENT_ID: ${{ secrets.ANILIST_CLIENT_ID }}
+      ANILIST_CLIENT_SECRET: ${{ secrets.ANILIST_CLIENT_SECRET }}
+      ANILIST_REDIRECT_URI: ${{ secrets.ANILIST_REDIRECT_URI }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      ELECTRON_SKIP_NOTARIZE: '1'
 
     steps:
       - name: Checkout
@@ -34,9 +41,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          # Required by AppImage packaging on Ubuntu 22.04+
           sudo apt-get install -y libfuse2
-          # Helpful runtime libs for Electron (defensive)
           sudo apt-get install -y libnss3 libxss1 libgbm1 libasound2 libgtk-3-0
 
       - name: Cache Electron artifacts
@@ -49,15 +54,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-electron-cache-
 
+      - name: Generate src/modules/clientData.ts from secrets
+        shell: bash
+        run: |
+          if [[ -z "${ANILIST_CLIENT_ID}" || -z "${ANILIST_CLIENT_SECRET}" ]]; then
+            echo "Missing required secrets: ANILIST_CLIENT_ID and/or ANILIST_CLIENT_SECRET"
+            exit 1
+          fi
+          node -e "const fs=require('fs');fs.mkdirSync('src/modules',{recursive:true});const data={clientId:Number(process.env.ANILIST_CLIENT_ID),redirectUri:(process.env.ANILIST_REDIRECT_URI||'akuse://index'),clientSecret:String(process.env.ANILIST_CLIENT_SECRET)};const header='import { ClientData } from \"../types/types\";\\n\\n';const body='export const clientData: ClientData = ' + JSON.stringify(data, null, 2) + ';\\n';fs.writeFileSync('src/modules/clientData.ts', header + body);"
+
       - name: Install dependencies
         run: npm ci
 
       - name: Build and package
         run: ${{ matrix.packageScript }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-          ELECTRON_SKIP_NOTARIZE: '1'
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
