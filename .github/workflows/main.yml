@@ -62,15 +62,36 @@ jobs:
           sudo apt-get install -y libnss3 libxss1 libgbm1 libgtk-3-0
           sudo apt-get install -y libasound2t64 || sudo apt-get install -y libasound2
 
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            release/app/node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json', 'release/app/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
       - name: Cache Electron artifacts
         uses: actions/cache@v4
         with:
           path: |
             ~/.cache/electron
             ~/.cache/electron-builder
-          key: ${{ runner.os }}-electron-cache-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-electron-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-electron-cache-
+            ${{ runner.os }}-electron-
+
+      - name: Cache TypeScript/Webpack build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .erb/dll
+            dist
+            release/app/dist
+          key: ${{ runner.os }}-build-${{ hashFiles('src/**/*.ts', 'src/**/*.tsx', 'package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
 
       - name: Generate src/modules/clientData.ts from secrets
         shell: bash
