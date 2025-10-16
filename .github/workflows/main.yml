@@ -120,6 +120,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           merge-multiple: true
+          path: release/build
 
       - name: Create Release and upload assets
         uses: softprops/action-gh-release@v2
