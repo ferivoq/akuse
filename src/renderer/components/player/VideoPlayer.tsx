@@ -392,6 +392,7 @@ const VideoPlayer: React.FC<{
     ) as number;
     const outlineColor = STORE.get('subtitle_outline_color') as string;
     const outlineSize = STORE.get('subtitle_outline_size') as number;
+    const position = STORE.get('subtitle_position') as number;
 
     const hexToRgba = (hex: string, alpha: number) => {
       const r = parseInt(hex.slice(1, 3), 16);
@@ -432,6 +433,9 @@ const VideoPlayer: React.FC<{
         color: ${textColor};
         background-color: ${bgColor};
         text-shadow: ${outlineShadow};
+      }
+      #video::-webkit-media-text-track-display {
+        padding-bottom: ${position}% !important;
       }
     `;
 

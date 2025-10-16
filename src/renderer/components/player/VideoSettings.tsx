@@ -91,6 +91,9 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
     const [subtitleOutlineSize, setSubtitleOutlineSize] = useState<number>(
       STORE.get('subtitle_outline_size') as number,
     );
+    const [subtitlePosition, setSubtitlePosition] = useState<number>(
+      STORE.get('subtitle_position') as number,
+    );
 
     // useEffect(() => {
     //   console.log('show');
@@ -290,6 +293,15 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
       const size = parseInt(event.target.value);
       STORE.set('subtitle_outline_size', size);
       setSubtitleOutlineSize(size);
+      onSubtitleStyleChange?.();
+    };
+
+    const handleSubtitlePositionChange = (
+      event: ChangeEvent<HTMLInputElement>,
+    ) => {
+      const position = parseInt(event.target.value);
+      STORE.set('subtitle_position', position);
+      setSubtitlePosition(position);
       onSubtitleStyleChange?.();
     };
 
@@ -539,6 +551,23 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
                     step="0.5"
                     value={subtitleOutlineSize}
                     onChange={handleSubtitleOutlineSizeChange}
+                  />
+                </li>
+                <li className="subtitle-position">
+                  <span>
+                    <FontAwesomeIcon
+                      className="i label"
+                      icon={faClosedCaptioning}
+                    />
+                    Bottom Margin ({subtitlePosition}%)
+                  </span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="30"
+                    step="1"
+                    value={subtitlePosition}
+                    onChange={handleSubtitlePositionChange}
                   />
                 </li>
               </>
