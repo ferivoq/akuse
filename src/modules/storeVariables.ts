@@ -25,6 +25,8 @@ const defaultValues = {
   subtitle_opacity: 100,
   subtitle_background_color: '#000000',
   subtitle_background_opacity: 75,
+  subtitle_outline_color: '#000000',
+  subtitle_outline_size: 2,
 };
 
 export const setDefaultStoreVariables = () => {

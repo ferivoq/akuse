@@ -390,6 +390,8 @@ const VideoPlayer: React.FC<{
     const backgroundOpacity = STORE.get(
       'subtitle_background_opacity',
     ) as number;
+    const outlineColor = STORE.get('subtitle_outline_color') as string;
+    const outlineSize = STORE.get('subtitle_outline_size') as number;
 
     const hexToRgba = (hex: string, alpha: number) => {
       const r = parseInt(hex.slice(1, 3), 16);
@@ -400,6 +402,21 @@ const VideoPlayer: React.FC<{
 
     const textColor = hexToRgba(color, opacity / 100);
     const bgColor = hexToRgba(backgroundColor, backgroundOpacity / 100);
+
+    const createOutlineShadow = (color: string, size: number) => {
+      if (size === 0) return 'none';
+      const shadows = [];
+      for (let x = -size; x <= size; x += 0.5) {
+        for (let y = -size; y <= size; y += 0.5) {
+          if (x !== 0 || y !== 0) {
+            shadows.push(`${x}px ${y}px 0 ${color}`);
+          }
+        }
+      }
+      return shadows.join(', ');
+    };
+
+    const outlineShadow = createOutlineShadow(outlineColor, outlineSize);
 
     let styleElement = document.getElementById('subtitle-custom-styles');
     if (styleElement) {
@@ -414,7 +431,7 @@ const VideoPlayer: React.FC<{
         font-size: ${fontSize}%;
         color: ${textColor};
         background-color: ${bgColor};
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        text-shadow: ${outlineShadow};
       }
     `;
 

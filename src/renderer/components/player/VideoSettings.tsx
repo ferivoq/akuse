@@ -85,6 +85,12 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
       useState<string>(STORE.get('subtitle_background_color') as string);
     const [subtitleBackgroundOpacity, setSubtitleBackgroundOpacity] =
       useState<number>(STORE.get('subtitle_background_opacity') as number);
+    const [subtitleOutlineColor, setSubtitleOutlineColor] = useState<string>(
+      STORE.get('subtitle_outline_color') as string,
+    );
+    const [subtitleOutlineSize, setSubtitleOutlineSize] = useState<number>(
+      STORE.get('subtitle_outline_size') as number,
+    );
 
     // useEffect(() => {
     //   console.log('show');
@@ -267,6 +273,23 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
       const opacity = parseInt(event.target.value);
       STORE.set('subtitle_background_opacity', opacity);
       setSubtitleBackgroundOpacity(opacity);
+      onSubtitleStyleChange?.();
+    };
+
+    const handleSubtitleOutlineColorChange = (
+      event: ChangeEvent<HTMLInputElement>,
+    ) => {
+      STORE.set('subtitle_outline_color', event.target.value);
+      setSubtitleOutlineColor(event.target.value);
+      onSubtitleStyleChange?.();
+    };
+
+    const handleSubtitleOutlineSizeChange = (
+      event: ChangeEvent<HTMLInputElement>,
+    ) => {
+      const size = parseInt(event.target.value);
+      STORE.set('subtitle_outline_size', size);
+      setSubtitleOutlineSize(size);
       onSubtitleStyleChange?.();
     };
 
@@ -485,6 +508,37 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
                     step="5"
                     value={subtitleBackgroundOpacity}
                     onChange={handleSubtitleBackgroundOpacityChange}
+                  />
+                </li>
+                <li className="subtitle-outline-color">
+                  <span>
+                    <FontAwesomeIcon
+                      className="i label"
+                      icon={faClosedCaptioning}
+                    />
+                    Outline Color
+                  </span>
+                  <input
+                    type="color"
+                    value={subtitleOutlineColor}
+                    onChange={handleSubtitleOutlineColorChange}
+                  />
+                </li>
+                <li className="subtitle-outline-size">
+                  <span>
+                    <FontAwesomeIcon
+                      className="i label"
+                      icon={faClosedCaptioning}
+                    />
+                    Outline Size ({subtitleOutlineSize}px)
+                  </span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="5"
+                    step="0.5"
+                    value={subtitleOutlineSize}
+                    onChange={handleSubtitleOutlineSizeChange}
                   />
                 </li>
               </>
