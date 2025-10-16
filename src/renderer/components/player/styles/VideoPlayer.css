@@ -449,6 +449,30 @@
   accent-color: var(--font-1);
 }
 
+.up-controls .settings-content .dropdown input[type='color'] {
+  width: 50px;
+  height: 30px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  background: transparent;
+}
+
+.up-controls
+  .settings-content
+  .dropdown
+  input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.up-controls
+  .settings-content
+  .dropdown
+  input[type='color']::-webkit-color-swatch {
+  border: 1px solid var(--color-transparency);
+  border-radius: var(--border-radius);
+}
+
 .up-controls .settings-content .dropdown li {
   display: flex;
   align-items: center;
@@ -565,12 +589,17 @@
   color: var(--font-2);
 }
 
-.bottom-controls .video-duration:active {
-  /* transform: scale(0.95); */
-}
-
 .skip-button {
   right: 0;
   bottom: 80px;
   position: absolute;
+}
+
+/* Subtitle cue styling - default values, overridden by dynamic styles */
+#video::cue {
+  font-family: Arial, sans-serif;
+  font-size: 100%;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.75);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }

@@ -381,6 +381,50 @@ const VideoPlayer: React.FC<{
     track.track.mode = 'showing';
   };
 
+  const applySubtitleStyles = () => {
+    const fontFamily = STORE.get('subtitle_font_family') as string;
+    const fontSize = STORE.get('subtitle_font_size') as number;
+    const color = STORE.get('subtitle_color') as string;
+    const opacity = STORE.get('subtitle_opacity') as number;
+    const backgroundColor = STORE.get('subtitle_background_color') as string;
+    const backgroundOpacity = STORE.get(
+      'subtitle_background_opacity',
+    ) as number;
+
+    const hexToRgba = (hex: string, alpha: number) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
+    const textColor = hexToRgba(color, opacity / 100);
+    const bgColor = hexToRgba(backgroundColor, backgroundOpacity / 100);
+
+    let styleElement = document.getElementById('subtitle-custom-styles');
+    if (styleElement) {
+      styleElement.remove();
+    }
+
+    styleElement = document.createElement('style');
+    styleElement.id = 'subtitle-custom-styles';
+    styleElement.textContent = `
+      #video::cue {
+        font-family: ${fontFamily}, sans-serif;
+        font-size: ${fontSize}%;
+        color: ${textColor};
+        background-color: ${bgColor};
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+    `;
+
+    document.head.appendChild(styleElement);
+  };
+
+  useEffect(() => {
+    applySubtitleStyles();
+  }, []);
+
   const getBestQualityVideo = (videos: IVideo[]): IVideo => {
     const qualityOrder = ['1080p', '720p', '480p', '360p', 'default', 'backup'];
 
@@ -988,6 +1032,7 @@ const VideoPlayer: React.FC<{
               showPreviousEpisodeButton={showPreviousEpisodeButton}
               fullscreen={fullscreen}
               onSubtitleTrack={setSubtitleTrack}
+              onSubtitleStyleChange={applySubtitleStyles}
               onFullScreentoggle={toggleFullScreen}
               onPiPToggle={togglePiP}
               onChangeEpisode={changeEpisode}

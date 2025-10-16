@@ -28,6 +28,7 @@ interface TopControlsProps {
   fullscreen: boolean;
   subtitleTracks?: ISubtitle[];
   onSubtitleTrack: (track: ISubtitle) => void;
+  onSubtitleStyleChange?: () => void;
   onFullScreentoggle: () => void;
   onPiPToggle: () => void;
   onChangeEpisode: (
@@ -59,6 +60,7 @@ const TopControls: React.FC<TopControlsProps> = ({
   onDropdownToggle,
   subtitleTracks,
   onSubtitleTrack,
+  onSubtitleStyleChange,
 }) => {
   const settingsRef = useRef<HTMLDivElement>(null);
 
@@ -102,6 +104,7 @@ const TopControls: React.FC<TopControlsProps> = ({
           ref={settingsRef}
           hls={hls}
           onSubtitleTrack={onSubtitleTrack}
+          onSubtitleStyleChange={onSubtitleStyleChange}
           onShow={(show) => {
             closeOthers();
             setShowSettings(show);

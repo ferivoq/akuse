@@ -19,6 +19,12 @@ const defaultValues = {
   provider_match_cache: {},
   adult_content: true,
   light_mode: false,
+  subtitle_font_family: 'Arial',
+  subtitle_font_size: 100,
+  subtitle_color: '#FFFFFF',
+  subtitle_opacity: 100,
+  subtitle_background_color: '#000000',
+  subtitle_background_opacity: 75,
 };
 
 export const setDefaultStoreVariables = () => {

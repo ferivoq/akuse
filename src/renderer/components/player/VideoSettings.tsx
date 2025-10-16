@@ -1,6 +1,7 @@
 import { ISubtitle } from '@consumet/extensions';
 import {
   faClock,
+  faClosedCaptioning,
   faGear,
   faLanguage,
   faRotateRight,
@@ -16,9 +17,7 @@ import React, {
   ChangeEvent,
   forwardRef,
   useCallback,
-  useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 
@@ -37,6 +36,7 @@ interface SettingsProps {
     episode: number | null,
     reloadAtPreviousTime?: boolean,
   ) => Promise<boolean>;
+  onSubtitleStyleChange?: () => void;
 }
 
 const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
@@ -49,6 +49,7 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
       onChangeEpisode,
       onSubtitleTrack,
       subtitleTracks,
+      onSubtitleStyleChange,
     },
     ref,
   ) => {
@@ -68,6 +69,22 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
     const [changeEpisodeLoading, setChangeEpisodeLoading] =
       useState<boolean>(false);
     const [subtitleTrack, setSubtitleTrack] = useState<ISubtitle | undefined>();
+    const [subtitleFontFamily, setSubtitleFontFamily] = useState<string>(
+      STORE.get('subtitle_font_family') as string,
+    );
+    const [subtitleFontSize, setSubtitleFontSize] = useState<number>(
+      STORE.get('subtitle_font_size') as number,
+    );
+    const [subtitleColor, setSubtitleColor] = useState<string>(
+      STORE.get('subtitle_color') as string,
+    );
+    const [subtitleOpacity, setSubtitleOpacity] = useState<number>(
+      STORE.get('subtitle_opacity') as number,
+    );
+    const [subtitleBackgroundColor, setSubtitleBackgroundColor] =
+      useState<string>(STORE.get('subtitle_background_color') as string);
+    const [subtitleBackgroundOpacity, setSubtitleBackgroundOpacity] =
+      useState<number>(STORE.get('subtitle_background_opacity') as number);
 
     // useEffect(() => {
     //   console.log('show');
@@ -204,6 +221,55 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
       setSubtitleTrack(value);
     };
 
+    const handleSubtitleFontFamilyChange = (value: string) => {
+      STORE.set('subtitle_font_family', value);
+      setSubtitleFontFamily(value);
+      onSubtitleStyleChange?.();
+    };
+
+    const handleSubtitleFontSizeChange = (
+      event: ChangeEvent<HTMLInputElement>,
+    ) => {
+      const size = parseInt(event.target.value);
+      STORE.set('subtitle_font_size', size);
+      setSubtitleFontSize(size);
+      onSubtitleStyleChange?.();
+    };
+
+    const handleSubtitleColorChange = (
+      event: ChangeEvent<HTMLInputElement>,
+    ) => {
+      STORE.set('subtitle_color', event.target.value);
+      setSubtitleColor(event.target.value);
+      onSubtitleStyleChange?.();
+    };
+
+    const handleSubtitleOpacityChange = (
+      event: ChangeEvent<HTMLInputElement>,
+    ) => {
+      const opacity = parseInt(event.target.value);
+      STORE.set('subtitle_opacity', opacity);
+      setSubtitleOpacity(opacity);
+      onSubtitleStyleChange?.();
+    };
+
+    const handleSubtitleBackgroundColorChange = (
+      event: ChangeEvent<HTMLInputElement>,
+    ) => {
+      STORE.set('subtitle_background_color', event.target.value);
+      setSubtitleBackgroundColor(event.target.value);
+      onSubtitleStyleChange?.();
+    };
+
+    const handleSubtitleBackgroundOpacityChange = (
+      event: ChangeEvent<HTMLInputElement>,
+    ) => {
+      const opacity = parseInt(event.target.value);
+      STORE.set('subtitle_background_opacity', opacity);
+      setSubtitleBackgroundOpacity(opacity);
+      onSubtitleStyleChange?.();
+    };
+
     return (
       <div className="settings-content">
         <button
@@ -299,22 +365,129 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
               />
             </li>
             {subtitleTrack && subtitleTracks && (
-              <li className="subtitle-tracks">
-                <span>
-                  <FontAwesomeIcon className="i label" icon={faLanguage} />
-                  Subtitles
-                </span>
-                <Select
-                  zIndex={10}
-                  options={subtitleTracks.map((value) => ({
-                    label: value.lang,
-                    value: value,
-                  }))}
-                  selectedValue={subtitleTrack}
-                  onChange={handleChangeSubtitleTrack}
-                  width={100}
-                />
-              </li>
+              <>
+                <li className="subtitle-tracks">
+                  <span>
+                    <FontAwesomeIcon className="i label" icon={faLanguage} />
+                    Subtitles
+                  </span>
+                  <Select
+                    zIndex={10}
+                    options={subtitleTracks.map((value) => ({
+                      label: value.lang,
+                      value: value,
+                    }))}
+                    selectedValue={subtitleTrack}
+                    onChange={handleChangeSubtitleTrack}
+                    width={100}
+                  />
+                </li>
+                <li className="subtitle-font-family">
+                  <span>
+                    <FontAwesomeIcon
+                      className="i label"
+                      icon={faClosedCaptioning}
+                    />
+                    Font Family
+                  </span>
+                  <Select
+                    zIndex={9}
+                    options={[
+                      { label: 'Arial', value: 'Arial' },
+                      { label: 'Helvetica', value: 'Helvetica' },
+                      { label: 'Times New Roman', value: 'Times New Roman' },
+                      { label: 'Courier New', value: 'Courier New' },
+                      { label: 'Verdana', value: 'Verdana' },
+                      { label: 'Georgia', value: 'Georgia' },
+                      { label: 'Comic Sans MS', value: 'Comic Sans MS' },
+                      { label: 'Trebuchet MS', value: 'Trebuchet MS' },
+                      { label: 'Impact', value: 'Impact' },
+                    ]}
+                    selectedValue={subtitleFontFamily}
+                    onChange={handleSubtitleFontFamilyChange}
+                    width={100}
+                  />
+                </li>
+                <li className="subtitle-font-size">
+                  <span>
+                    <FontAwesomeIcon
+                      className="i label"
+                      icon={faClosedCaptioning}
+                    />
+                    Font Size ({subtitleFontSize}%)
+                  </span>
+                  <input
+                    type="range"
+                    min="50"
+                    max="200"
+                    step="10"
+                    value={subtitleFontSize}
+                    onChange={handleSubtitleFontSizeChange}
+                  />
+                </li>
+                <li className="subtitle-color">
+                  <span>
+                    <FontAwesomeIcon
+                      className="i label"
+                      icon={faClosedCaptioning}
+                    />
+                    Text Color
+                  </span>
+                  <input
+                    type="color"
+                    value={subtitleColor}
+                    onChange={handleSubtitleColorChange}
+                  />
+                </li>
+                <li className="subtitle-opacity">
+                  <span>
+                    <FontAwesomeIcon
+                      className="i label"
+                      icon={faClosedCaptioning}
+                    />
+                    Text Opacity ({subtitleOpacity}%)
+                  </span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="5"
+                    value={subtitleOpacity}
+                    onChange={handleSubtitleOpacityChange}
+                  />
+                </li>
+                <li className="subtitle-background-color">
+                  <span>
+                    <FontAwesomeIcon
+                      className="i label"
+                      icon={faClosedCaptioning}
+                    />
+                    BG Color
+                  </span>
+                  <input
+                    type="color"
+                    value={subtitleBackgroundColor}
+                    onChange={handleSubtitleBackgroundColorChange}
+                  />
+                </li>
+                <li className="subtitle-background-opacity">
+                  <span>
+                    <FontAwesomeIcon
+                      className="i label"
+                      icon={faClosedCaptioning}
+                    />
+                    BG Opacity ({subtitleBackgroundOpacity}%)
+                  </span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="5"
+                    value={subtitleBackgroundOpacity}
+                    onChange={handleSubtitleBackgroundOpacityChange}
+                  />
+                </li>
+              </>
             )}
             <li className="intro-skip-time">
               <span>
@@ -322,7 +495,7 @@ const VideoSettings = forwardRef<HTMLDivElement, SettingsProps>(
                 Intro Skip Time
               </span>
               <Select
-                zIndex={9}
+                zIndex={3}
                 options={[
                   { label: '5', value: 5 },
                   { label: '10', value: 10 },
