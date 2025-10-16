@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   create:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build (${{ matrix.name }})
