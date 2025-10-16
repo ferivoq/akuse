@@ -92,15 +92,14 @@ jobs:
         if: matrix.kind == 'mac'
         shell: bash
         run: |
+          hdiutil detach /Volumes/akuse 2>/dev/null || true
+
           npx ts-node ./.erb/scripts/clean.js dist
           npm run build
           npx electron-builder build --mac --${{ matrix.arch }} --publish never
           npm run build:dll
 
-          for f in release/build/*.dmg; do
-            [[ -e "$f" ]] || continue
-            mv "$f" "${f%.dmg}-${{ matrix.arch }}.dmg"
-          done
+          hdiutil detach /Volumes/akuse 2>/dev/null || true
 
           rm -f release/build/*.zip || true
 

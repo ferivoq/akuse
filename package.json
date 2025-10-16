@@ -206,7 +206,7 @@
     },
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
-      "artifactName": "${os}-akuse-${version}.${ext}",
+      "artifactName": "${os}-akuse-${version}-${arch}.${ext}",
       "target": {
         "target": "default",
         "arch": [
