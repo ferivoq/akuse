@@ -28,6 +28,7 @@ const defaultValues = {
   subtitle_outline_color: '#000000',
   subtitle_outline_size: 2,
   subtitle_position: 10,
+  preferred_quality: -1,
 };
 
 export const setDefaultStoreVariables = () => {

@@ -461,6 +461,24 @@ const VideoPlayer: React.FC<{
     return videos[0];
   };
 
+  const getPreferredQualityLevel = (levels: any[]): number => {
+    const preferredQuality = STORE.get('preferred_quality') as number;
+
+    if (preferredQuality === -1 || preferredQuality === undefined) {
+      return levels.length - 1;
+    }
+
+    if (preferredQuality >= 0 && preferredQuality < levels.length) {
+      return preferredQuality;
+    }
+
+    if (preferredQuality >= levels.length) {
+      return levels.length - 1;
+    }
+
+    return levels.length - 1;
+  };
+
   const playSource = (
     video: IVideo,
     headers?: any,
@@ -519,7 +537,7 @@ const VideoPlayer: React.FC<{
         hls.attachMedia(videoRef.current);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           if (videoRef.current) {
-            hls.currentLevel = hls.levels.length - 1;
+            hls.currentLevel = getPreferredQualityLevel(hls.levels);
             playVideoAndSetTime();
             setHlsData(hls);
           }
