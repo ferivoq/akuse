@@ -340,12 +340,31 @@
   display: block;
   opacity: 0;
   width: 400px;
+  max-height: calc(100vh - 140px);
   opacity: 0.95;
   list-style: none;
   border-radius: var(--border-radius);
   background-color: #22252ee6;
   transition: opacity 0.13s ease;
   pointer-events: auto;
+  overflow-y: auto;
+}
+
+.up-controls .dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.up-controls .dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.up-controls .dropdown::-webkit-scrollbar-thumb {
+  background: var(--color-transparency);
+  border-radius: 4px;
+}
+
+.up-controls .dropdown::-webkit-scrollbar-thumb:hover {
+  background: var(--color-transparency-2);
 }
 
 .up-controls .other-episodes-content .dropdown {
