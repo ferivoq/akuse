@@ -484,6 +484,13 @@ const VideoPlayer: React.FC<{
     headers?: any,
     subtitles?: ISubtitle[],
   ) => {
+    if (videoRef.current) {
+      const existingTrack = videoRef.current.querySelector('track');
+      if (existingTrack) existingTrack.remove();
+      if (!subtitles || subtitles.length === 0) {
+        setSubtitleTracks(undefined);
+      }
+    }
     if (video?.isM3U8) {
       playHlsVideo(video, headers, subtitles);
     } else {
@@ -984,7 +991,7 @@ const VideoPlayer: React.FC<{
 
     const bestVideo = getBestQualityVideo(source.sources);
 
-    setData(bestVideo, source.headers);
+    setData(bestVideo, source.headers, source.subtitles);
     return true;
   };
 
