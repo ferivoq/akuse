@@ -1,9 +1,10 @@
 <p align="center">
     <img width="120px" src="./assets/icon.png"/>
-    <h1 align="center">akuse</h1>
+    <h1 align="center">akuse fork</h1>
 </p>
 
 <p align="center">
+  <strong>A continuation of Akuse with updated providers and new features.</strong><br>
   <strong>Simple and easy to use anime streaming desktop app without ads.</strong>
 </p>
 
@@ -29,29 +30,20 @@
 # Why should you choose akuse?
 
 - **⚠️ You shouldn't:** The app is broken at the moment. Check the warning below there.
-- ~~**🚀 Fast:**~~ ~~Smooth and quick streaming with minimal buffering.~~
-- ~~**🎨 Sleek UI:**~~ ~~User-friendly and eye-catching.~~
-- ~~**🔄 Reliable:**~~ ~~Regular updates and fresh content.~~
+- **🚀 Fast: Smooth and quick streaming with minimal buffering.
+- **🎨 Sleek UI:** User-friendly and eye-catching.
+- **🔄 Reliable:** Regular updates and fresh content.
 
 <br/>
 
 # Languages
 
 > [!WARNING]  
-> Almost all sources are broken. The app will be rebuilt with a modular source system, but no ETA.
-
-The languages where both the sub and dub don't work are implemented in the app, but they aren't selectable.
+> We currently have only a few providers. Please give us some time as we start adding more.
 
 | Source           | Languages           | Sub | Dub | Notes                                                      |
 | ---------------- | ------------------- | --- | --- | ---------------------------------------------------------- |
-| 🌍 Yuki          | English + many more | ❌  | ❌  | Recommended                                                |
-| 🇮🇹 AnimeUnity    | Italian             | ✅  | ✅  | Italian recommended                                        |
-| 🇺🇸 Maze          | English             | ❌  | ❌  | Great alternative                                          |
-| 🇺🇸 Pahe          | English             | ❌  | ❌  | Great alternative                                          |
-| 🇺🇸 AnimeParadise | English + some more | ❌  | ❌  | Works for some anime, not always up-to-date                |
-| 🇺🇸 AnimeHeaven   | English             | ❌  | ❌  | Works for some anime, not always up-to-date                |
-| 🌍 HiAnime       | English + many more | ❌  | ❌  | Unreliable, slow, doesn't always provide all the languages |
-| 🇺🇸 Gogoanime     | English             | ❌  | ❌  | Broken                                                     |
+| 🇺🇸 Zoro (HiAnime)     | English             | ✅  | ❌  | Broken                                                     |
 
 # Other info
 
@@ -61,7 +53,7 @@ The languages where both the sub and dub don't work are implemented in the app, 
 Start cloning akuse:
 
 ```
-git clone https://github.com/akuse-app/akuse.git
+git clone https://github.com/waruhachi/akuse.git
 ```
 
 Next, go to [this link](https://anilist.co/settings/developer) and create a new AniList API Client.
