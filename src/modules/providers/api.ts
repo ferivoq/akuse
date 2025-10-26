@@ -58,7 +58,7 @@ export const searchAutomaticMatchInProvider = async (
         animeTitles[0],
       );
       console.log('[Renderer] consumet:search returned:', results);
-      return results && results.length > 0 ? results[0] : null;
+      return results && results.length > 0 ? results : null;
     }
   }
 

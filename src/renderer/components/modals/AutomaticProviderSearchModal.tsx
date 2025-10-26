@@ -98,12 +98,12 @@ const AutomaticProviderSearchModal: React.FC<{
     setResults([]);
     setLoading(true);
 
-    const providerResult = await searchAutomaticMatchInProvider(
+    const providerResults = await searchAutomaticMatchInProvider(
       listAnimeData!,
       episode!,
     );
-    if (providerResult) {
-      setResults([providerResult]);
+    if (providerResults && providerResults.length > 0) {
+      setResults(providerResults);
       setFeedbackText('');
     } else {
       setFeedbackText(
@@ -224,10 +224,18 @@ const AutomaticProviderSearchModal: React.FC<{
                             <strong>Title: </strong>
                             {result?.title}
                           </p>
-                          <p>
-                            <strong>Id: </strong>
-                            {result?.id}
-                          </p>
+                          {(result?.sub || result?.dub || result?.episodes) && (
+                            <p>
+                              <strong>Episodes: </strong>
+                              {result?.sub || result?.dub || result?.episodes}
+                            </p>
+                          )}
+                          {result?.type && (
+                            <p>
+                              <strong>Type: </strong>
+                              {result?.type}
+                            </p>
+                          )}
                         </div>
                       </div>
                     ))}
