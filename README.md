@@ -37,7 +37,7 @@
 
 | Source            | Languages | Sub | Dub | Notes  |
 | ----------------- | --------- | --- | --- | ------ |
-| 🇺🇸 Zoro (HiAnime) | English   | ✅  | ❌  | Broken |
+| 🇺🇸 Zoro (HiAnime) | English   | ✅  | ✅  | Works well |
 
 # Other info
 

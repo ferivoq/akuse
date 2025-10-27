@@ -8,7 +8,7 @@
     "streaming",
     "desktop"
   ],
-  "homepage": "https://github.com/aleganza/akuse#readme",
+  "homepage": "https://github.com/waruhachi/akuse#readme",
   "bugs": {
     "url": "https://github.com/waruhachi/akuse/issues"
   },
@@ -190,7 +190,7 @@
   },
   "build": {
     "productName": "akuse",
-    "appId": "com.aleganza.akuse",
+    "appId": "com.waruhachi.akuse",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
