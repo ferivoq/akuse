@@ -120,14 +120,14 @@ ipcMain.handle('get-is-packaged', async () => {
 });
 
 // IPC handlers for consumet.ts anime providers
-ipcMain.handle('consumet:search', async (_event, provider, query) => {
+ipcMain.handle('consumet:search', async (_event, provider, query, dubbed) => {
   try {
     console.log(
-      `[IPC] consumet:search - provider: ${provider}, query: ${query}`,
+      `[IPC] consumet:search - provider: ${provider}, query: ${query}, dubbed: ${dubbed}`,
     );
   } catch (e) {}
   try {
-    const result = await consumet.searchAnime(provider, query);
+    const result = await consumet.searchAnime(provider, query, dubbed);
     try {
       console.log(`[IPC] consumet:search result:`, result);
     } catch (e) {}
@@ -140,12 +140,14 @@ ipcMain.handle('consumet:search', async (_event, provider, query) => {
   }
 });
 
-ipcMain.handle('consumet:fetchInfo', async (_event, provider, id) => {
+ipcMain.handle('consumet:fetchInfo', async (_event, provider, id, dubbed) => {
   try {
-    console.log(`[IPC] consumet:fetchInfo - provider: ${provider}, id: ${id}`);
+    console.log(
+      `[IPC] consumet:fetchInfo - provider: ${provider}, id: ${id}, dubbed: ${dubbed}`,
+    );
   } catch (e) {}
   try {
-    const result = await consumet.fetchAnimeInfo(provider, id);
+    const result = await consumet.fetchAnimeInfo(provider, id, dubbed);
     try {
       console.log(`[IPC] consumet:fetchInfo result:`, result);
     } catch (e) {}
@@ -160,14 +162,18 @@ ipcMain.handle('consumet:fetchInfo', async (_event, provider, id) => {
 
 ipcMain.handle(
   'consumet:fetchEpisodeSources',
-  async (_event, provider, episodeId) => {
+  async (_event, provider, episodeId, dubbed) => {
     try {
       console.log(
-        `[IPC] consumet:fetchEpisodeSources - provider: ${provider}, episodeId: ${episodeId}`,
+        `[IPC] consumet:fetchEpisodeSources - provider: ${provider}, episodeId: ${episodeId}, dubbed: ${dubbed}`,
       );
     } catch (e) {}
     try {
-      const result = await consumet.fetchEpisodeSources(provider, episodeId);
+      const result = await consumet.fetchEpisodeSources(
+        provider,
+        episodeId,
+        dubbed,
+      );
       try {
         console.log(`[IPC] consumet:fetchEpisodeSources result:`, result);
       } catch (e) {}

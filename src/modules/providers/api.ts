@@ -16,7 +16,7 @@ export const searchInProvider = async (query: string) => {
 
   switch (lang) {
     case 'ZORO': {
-      return await ipcRenderer.invoke('consumet:search', 'zoro', query);
+      return await ipcRenderer.invoke('consumet:search', 'zoro', query, dubbed);
     }
   }
 
@@ -56,6 +56,7 @@ export const searchAutomaticMatchInProvider = async (
         'consumet:search',
         'zoro',
         animeTitles[0],
+        dubbed,
       );
       console.log('[Renderer] consumet:search returned:', results);
       return results && results.length > 0 ? results : null;
@@ -79,6 +80,7 @@ export const getSourceFromProvider = async (
         'consumet:fetchInfo',
         'zoro',
         providerAnimeId,
+        dubbed,
       );
 
       if (!animeInfo || !animeInfo.episodes) {
@@ -99,6 +101,7 @@ export const getSourceFromProvider = async (
         'consumet:fetchEpisodeSources',
         'zoro',
         episodeData.id,
+        dubbed,
       );
     }
   }
