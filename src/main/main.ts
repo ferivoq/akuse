@@ -423,7 +423,7 @@ async function setActivity(
     buttons: buttons || [
       {
         label: 'Download akuse',
-        url: 'https://github.com/akuse-app/akuse/releases/latest',
+        url: 'https://github.com/waruhachi/akuse/releases/latest',
       },
     ],
   });
