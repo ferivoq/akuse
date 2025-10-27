@@ -254,7 +254,7 @@ export const getAccessToken = async (code: string): Promise<string> => {
     redirect_uri:
       isAppImage || !app.isPackaged
         ? 'https://anilist.co/api/v2/oauth/pin'
-        : clientData.redirectUri,
+        : CLIENT_DATA.redirectUri,
     code: code,
   };
 
