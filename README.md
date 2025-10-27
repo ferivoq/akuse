@@ -9,17 +9,11 @@
 </p>
 
 <p align="center">
-    <img alt="license" src="https://img.shields.io/github/license/aleganza/akuse?style=for-the-badge&labelColor=1a1d24"> 
-    <img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/akuse-app/akuse?style=for-the-badge&labelColor=1a1d24">
-    <img alt="total-downloads" src="https://img.shields.io/github/downloads/aleganza/akuse/total?style=for-the-badge&labelColor=1a1d24">
+    <img alt="license" src="https://img.shields.io/github/license/waruhachi/akuse?style=for-the-badge&labelColor=1a1d24"> 
+    <img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/waruhachi/akuse?style=for-the-badge&labelColor=1a1d24">
+    <img alt="total-downloads" src="https://img.shields.io/github/downloads/waruhachi/akuse/total?style=for-the-badge&labelColor=1a1d24">
     <a href="https://discord.gg/f3wdnqSNX5">
         <img alt="Discord" src="https://img.shields.io/discord/1163970236224118796?style=for-the-badge&labelColor=1a1d24&label=discord&logo=discord&color=%235567E3">
-    </a>
-</p>
-
-<p align="center">
-    <a href="https://ko-fi.com/aleganza">
-      <img width="400px" src="https://cdn.prod.website-files.com/5c14e387dab576fe667689cf/64f1a9ddd0246590df69ea0b_kofi_long_button_red%402x.png"/>
     </a>
 </p>
 
@@ -41,9 +35,9 @@
 > [!WARNING]  
 > We currently have only a few providers. Please give us some time as we start adding more.
 
-| Source           | Languages           | Sub | Dub | Notes                                                      |
-| ---------------- | ------------------- | --- | --- | ---------------------------------------------------------- |
-| 🇺🇸 Zoro (HiAnime)     | English             | ✅  | ❌  | Broken                                                     |
+| Source            | Languages | Sub | Dub | Notes  |
+| ----------------- | --------- | --- | --- | ------ |
+| 🇺🇸 Zoro (HiAnime) | English   | ✅  | ❌  | Broken |
 
 # Other info
 
@@ -57,7 +51,7 @@ git clone https://github.com/waruhachi/akuse.git
 ```
 
 Next, go to [this link](https://anilist.co/settings/developer) and create a new AniList API Client.
-As Redirect Uri, you can insert `akuse://index,https://anilist.co/api/v2/oauth/pin` (these are two space seprated uri) and it should work.
+As Redirect Uri, you can insert `akuse://index,https://anilist.co/api/v2/oauth/pin` (copy and paste as is, keeping the comma) and it should work.
 Now go inside the src/modules folder and create a clientData.ts file with a structure like this:
 
 ```bash
@@ -137,7 +131,7 @@ In AppImage and in a Development environment, the Log-In redirect doesn't work s
 
 ## 🌟 Contributors
 
-[![](https://contrib.rocks/image?repo=akuse-app/akuse)](https://github.com/akuse-app/akuse/graphs/contributors)
+[![](https://contrib.rocks/image?repo=waruhachi/akuse)](https://github.com/waruhachi/akuse/graphs/contributors)
 
 ## 🙌 Credits
 
