@@ -17,7 +17,11 @@ const STORE = new Store();
 
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
 
-const authUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${clientData.clientId}&redirect_uri=${isAppImage || !app.isPackaged ? 'https://anilist.co/api/v2/oauth/pin' : clientData.redirectUri}&response_type=code`;
+const redirectUri =
+  isAppImage || !app.isPackaged
+    ? 'https://anilist.co/api/v2/oauth/pin'
+    : clientData.redirectUri;
+const authUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${clientData.clientId}&redirect_uri=${redirectUri}&response_type=code`;
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 autoUpdater.autoRunAppAfterInstall = true;
